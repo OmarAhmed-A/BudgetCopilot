@@ -36,6 +36,7 @@
         "react-native-vector-icons": "^10.2.0",
         "react-native-web": "~0.19.13",
         "react-native-webview": "13.12.5",
+        "reanimated-color-picker": "^4.0.0",
       },
       "devDependencies": {
         "@babel/core": "^7.25.2",
@@ -1563,6 +1564,8 @@
     "react-test-renderer": ["react-test-renderer@18.3.1", "", { "dependencies": { "react-is": "^18.3.1", "react-shallow-renderer": "^16.15.0", "scheduler": "^0.23.2" }, "peerDependencies": { "react": "^18.3.1" } }, "sha512-KkAgygexHUkQqtvvx/otwxtuFu5cVjfzTCtjXLH9boS19/Nbtg84zS7wIQn39G8IlrhThBpQsMKkq5ZHZIYFXA=="],
 
     "readline": ["readline@1.3.0", "", {}, "sha512-k2d6ACCkiNYz222Fs/iNze30rRJ1iIicW7JuX/7/cozvih6YCkFZH+J6mAFDVgv0dRBaAyr4jDqC95R2y4IADg=="],
+
+    "reanimated-color-picker": ["reanimated-color-picker@4.0.0", "", { "peerDependencies": { "expo": ">=44.0.0", "react": "*", "react-native": "*", "react-native-gesture-handler": ">=2.0.0", "react-native-reanimated": "^2.0.0 || ^3.0.0" }, "optionalPeers": ["expo"] }, "sha512-AA9iIVcrFiE70oyGuOvh2Vy7D5R2MVPig8dxzHuFyCnbO+AmMzn3JYNERp/PHsI2G0/aPeCuPZu6vOL1jZAeRg=="],
 
     "recast": ["recast@0.21.5", "", { "dependencies": { "ast-types": "0.15.2", "esprima": "~4.0.0", "source-map": "~0.6.1", "tslib": "^2.0.1" } }, "sha512-hjMmLaUXAm1hIuTqOdeYObMslq/q+Xff6QE3Y2P+uoHAg2nmVlLBps2hzh1UJDdMtDTMXOFewK6ky51JQIeECg=="],
 

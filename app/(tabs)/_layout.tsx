@@ -1,8 +1,8 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useColorScheme } from "react-native";
 import Colors from "../../constants/Colors";
 import { PaperProvider } from "react-native-paper";
+import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function AppLayout() {
   const colorScheme = useColorScheme();
