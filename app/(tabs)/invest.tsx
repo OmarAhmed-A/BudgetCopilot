@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from "rea
 import { Card, Chip, Button, Divider, Modal, Portal, TextInput } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
-import { useColorScheme } from "react-native";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import { LineChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 
@@ -493,7 +493,16 @@ export default function InvestmentAdvisor() {
             numberOfLines={3}
             outlineColor={colors.border}
             activeOutlineColor={colors.primary}
+            textColor={colors.text}
             style={styles.queryInput}
+            theme={{
+              colors: {
+                text: colors.text,
+                placeholder: colors.grey,
+                background: colors.background,
+                onSurfaceVariant: colors.grey
+              }
+            }}
           />
           <View style={styles.queryExamples}>
             <Text style={[styles.examplesTitle, { color: colors.text }]}>Example questions:</Text>
@@ -518,6 +527,11 @@ export default function InvestmentAdvisor() {
             onPress={handleAskAI}
             style={[styles.askButton, { backgroundColor: colors.primary }]}
             disabled={!investmentQuery.trim()}
+            theme={{
+              colors: {
+                primary: colors.primary
+              }
+            }}
           >
             Ask Now
           </Button>
