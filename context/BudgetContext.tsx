@@ -20,6 +20,8 @@ export interface SpendingItem {
 interface BudgetContextType {
   income: number;
   setIncome: (income: number) => void;
+  balance: number;
+  setBalance: (balance: number) => void;
   spendingItems: SpendingItem[];
   addSpendingItem: (item: Omit<SpendingItem, 'id'>) => void;
   updateSpendingItem: (id: string, item: Partial<SpendingItem>) => void;
@@ -80,6 +82,7 @@ const defaultSpendingItems: SpendingItem[] = [
 
 export const BudgetProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [income, setIncomeState] = useState(5000);
+  const [balance, setBalanceState] = useState(12458.97); // Default balance
   const [spendingItems, setSpendingItems] = useState<SpendingItem[]>(defaultSpendingItems);
   const [isPremium, setIsPremium] = useState(false);
 
@@ -88,11 +91,16 @@ export const BudgetProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const loadBudgetData = async () => {
       try {
         const savedIncome = await AsyncStorage.getItem('income');
+        const savedBalance = await AsyncStorage.getItem('balance');
         const savedSpendingItems = await AsyncStorage.getItem('spendingItems');
         const savedIsPremium = await AsyncStorage.getItem('isPremium');
         
         if (savedIncome) {
           setIncomeState(parseFloat(savedIncome));
+        }
+        
+        if (savedBalance) {
+          setBalanceState(parseFloat(savedBalance));
         }
         
         if (savedSpendingItems) {
@@ -116,6 +124,15 @@ export const BudgetProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setIncomeState(value);
     } catch (e) {
       console.error('Error saving income', e);
+    }
+  };
+  
+  const saveBalance = async (value: number) => {
+    try {
+      await AsyncStorage.setItem('balance', value.toString());
+      setBalanceState(value);
+    } catch (e) {
+      console.error('Error saving balance', e);
     }
   };
 
@@ -171,6 +188,8 @@ export const BudgetProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       value={{ 
         income,
         setIncome: saveIncome,
+        balance,
+        setBalance: saveBalance,
         spendingItems,
         addSpendingItem,
         updateSpendingItem,

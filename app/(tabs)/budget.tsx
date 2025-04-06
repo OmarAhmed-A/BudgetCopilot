@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { Card, TextInput, ProgressBar, Button, Modal, Portal, IconButton, List, Divider, FAB, RadioButton } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
@@ -74,15 +74,48 @@ export default function BudgetManager() {
   const [categoryColor, setCategoryColor] = useState("#2F80ED");
   const [categoryType, setCategoryType] = useState("essentials");
   
+  // Temporary state for input values to prevent re-rendering while typing
+  const [tempCategoryName, setTempCategoryName] = useState("");
+  const [tempCategoryAmount, setTempCategoryAmount] = useState("");
+  const [tempCategorySpent, setTempCategorySpent] = useState("");
+  const [tempCategoryType, setTempCategoryType] = useState("essentials");
+  
   // Budget allocation percentages for the pie chart
   const essentialsPercent = 50;
   const savingsPercent = 30;
   const discretionaryPercent = 20;
   
   // Calculate amounts based on income and percentages
-  const essentialsAmount = (income * essentialsPercent / 100).toFixed(2);
-  const savingsAmount = (income * savingsPercent / 100).toFixed(2);
-  const discretionaryAmount = (income * discretionaryPercent / 100).toFixed(2);
+  const essentialsAmount = (income * essentialsPercent / 100);
+  const savingsAmount = (income * savingsPercent / 100);
+  const discretionaryAmount = (income * discretionaryPercent / 100);
+
+  // Calculate total spent per category type
+  const essentialsSpent = spendingItems
+    .filter(item => item.type === "essentials")
+    .reduce((sum, item) => sum + item.spent, 0);
+  
+  const savingsSpent = spendingItems
+    .filter(item => item.type === "savings")
+    .reduce((sum, item) => sum + item.spent, 0);
+  
+  const discretionarySpent = spendingItems
+    .filter(item => item.type === "discretionary")
+    .reduce((sum, item) => sum + item.spent, 0);
+  
+  const otherSpent = spendingItems
+    .filter(item => item.type === "other" || !item.type)
+    .reduce((sum, item) => sum + item.spent, 0);
+
+  // Calculate percentages of budget used
+  const essentialsPercentUsed = essentialsAmount > 0 ? (essentialsSpent / essentialsAmount) * 100 : 0;
+  const savingsPercentUsed = savingsAmount > 0 ? (savingsSpent / savingsAmount) * 100 : 0;
+  const discretionaryPercentUsed = discretionaryAmount > 0 ? (discretionarySpent / discretionaryAmount) * 100 : 0;
+  
+  // Determine if categories are over budget
+  const isEssentialsOverBudget = essentialsSpent > essentialsAmount;
+  const isSavingsOverBudget = savingsSpent > savingsAmount;
+  const isDiscretionaryOverBudget = discretionarySpent > discretionaryAmount;
   
   // Pie chart data
   const chartData = [
@@ -246,6 +279,26 @@ export default function BudgetManager() {
     setCreateModalVisible(true);
   };
 
+  // Set up temporary values when opening the edit modal
+  useEffect(() => {
+    if (editModalVisible && currentItem) {
+      setTempCategoryName(currentItem.category);
+      setTempCategoryAmount(currentItem.amount.toString());
+      setTempCategorySpent(currentItem.spent.toString());
+      setTempCategoryType(currentItem.type || "essentials");
+    }
+  }, [editModalVisible, currentItem]);
+
+  // Set up temporary values when opening the create modal
+  useEffect(() => {
+    if (createModalVisible) {
+      setTempCategoryName("");
+      setTempCategoryAmount("");
+      setTempCategorySpent("0");
+      setTempCategoryType("essentials");
+    }
+  }, [createModalVisible]);
+
   return (
     <>
       <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -287,11 +340,29 @@ export default function BudgetManager() {
                   </View>
                   <Text style={[styles.categoryLabel, { color: colors.text }]}>Essentials</Text>
                 </View>
-                <Text style={[styles.amountText, { color: colors.text }]}>${essentialsAmount}</Text>
+                <View style={styles.amountWithWarning}>
+                  {isEssentialsOverBudget && (
+                    <Ionicons name="warning" size={16} color={colors.danger} style={styles.warningIcon} />
+                  )}
+                  <Text style={[
+                    styles.amountText, 
+                    { color: isEssentialsOverBudget ? colors.danger : colors.text }
+                  ]}>
+                    ${essentialsSpent.toFixed(2)} / ${essentialsAmount.toFixed(2)}
+                  </Text>
+                </View>
               </View>
               <Text style={[styles.description, { color: colors.grey }]}>
                 Housing, groceries, utilities, and other necessities
               </Text>
+              <ProgressBar 
+                progress={Math.min(essentialsSpent / essentialsAmount, 1)} 
+                color={isEssentialsOverBudget ? colors.danger : colors.primary} 
+                style={styles.progressBar}
+              />
+              {isEssentialsOverBudget && (
+                <Text style={[styles.warningText, { color: colors.danger }]}>You've exceeded your essentials budget by ${(essentialsSpent - essentialsAmount).toFixed(2)}</Text>
+              )}
             </View>
             
             <View style={styles.budgetItem}>
@@ -302,11 +373,29 @@ export default function BudgetManager() {
                   </View>
                   <Text style={[styles.categoryLabel, { color: colors.text }]}>Savings</Text>
                 </View>
-                <Text style={[styles.amountText, { color: colors.text }]}>${savingsAmount}</Text>
+                <View style={styles.amountWithWarning}>
+                  {isSavingsOverBudget && (
+                    <Ionicons name="warning" size={16} color={colors.danger} style={styles.warningIcon} />
+                  )}
+                  <Text style={[
+                    styles.amountText, 
+                    { color: isSavingsOverBudget ? colors.danger : colors.text }
+                  ]}>
+                    ${savingsSpent.toFixed(2)} / ${savingsAmount.toFixed(2)}
+                  </Text>
+                </View>
               </View>
               <Text style={[styles.description, { color: colors.grey }]}>
                 Emergency fund, retirement, and future goals
               </Text>
+              <ProgressBar 
+                progress={Math.min(savingsSpent / savingsAmount, 1)} 
+                color={isSavingsOverBudget ? colors.danger : colors.success} 
+                style={styles.progressBar}
+              />
+              {isSavingsOverBudget && (
+                <Text style={[styles.warningText, { color: colors.danger }]}>You've exceeded your savings budget by ${(savingsSpent - savingsAmount).toFixed(2)}</Text>
+              )}
             </View>
             
             <View style={styles.budgetItem}>
@@ -317,12 +406,47 @@ export default function BudgetManager() {
                   </View>
                   <Text style={[styles.categoryLabel, { color: colors.text }]}>Discretionary</Text>
                 </View>
-                <Text style={[styles.amountText, { color: colors.text }]}>${discretionaryAmount}</Text>
+                <View style={styles.amountWithWarning}>
+                  {isDiscretionaryOverBudget && (
+                    <Ionicons name="warning" size={16} color={colors.danger} style={styles.warningIcon} />
+                  )}
+                  <Text style={[
+                    styles.amountText, 
+                    { color: isDiscretionaryOverBudget ? colors.danger : colors.text }
+                  ]}>
+                    ${discretionarySpent.toFixed(2)} / ${discretionaryAmount.toFixed(2)}
+                  </Text>
+                </View>
               </View>
               <Text style={[styles.description, { color: colors.grey }]}>
                 Entertainment, dining out, shopping, and other wants
               </Text>
+              <ProgressBar 
+                progress={Math.min(discretionarySpent / discretionaryAmount, 1)} 
+                color={isDiscretionaryOverBudget ? colors.danger : colors.secondary} 
+                style={styles.progressBar}
+              />
+              {isDiscretionaryOverBudget && (
+                <Text style={[styles.warningText, { color: colors.danger }]}>You've exceeded your discretionary budget by ${(discretionarySpent - discretionaryAmount).toFixed(2)}</Text>
+              )}
             </View>
+
+            {otherSpent > 0 && (
+              <View style={styles.budgetItem}>
+                <View style={styles.budgetHeader}>
+                  <View style={styles.categoryContainer}>
+                    <View style={[styles.categoryIcon, { backgroundColor: colors.warning }]}>
+                      <Ionicons name="apps-outline" size={18} color="#fff" />
+                    </View>
+                    <Text style={[styles.categoryLabel, { color: colors.text }]}>Other</Text>
+                  </View>
+                  <Text style={[styles.amountText, { color: colors.text }]}>${otherSpent.toFixed(2)}</Text>
+                </View>
+                <Text style={[styles.description, { color: colors.grey }]}>
+                  Miscellaneous expenses not categorized elsewhere
+                </Text>
+              </View>
+            )}
           </Card.Content>
         </Card>
 
@@ -431,8 +555,8 @@ export default function BudgetManager() {
           <TextInput
             mode="outlined"
             label="Category Name"
-            value={categoryName}
-            onChangeText={setCategoryName}
+            value={tempCategoryName}
+            onChangeText={setTempCategoryName}
             outlineColor={colors.border}
             activeOutlineColor={colors.primary}
             textColor={colors.text}
@@ -450,8 +574,8 @@ export default function BudgetManager() {
           <TextInput
             mode="outlined"
             label="Budget Amount"
-            value={categoryAmount}
-            onChangeText={setCategoryAmount}
+            value={tempCategoryAmount}
+            onChangeText={setTempCategoryAmount}
             keyboardType="numeric"
             left={<TextInput.Affix text="$" />}
             outlineColor={colors.border}
@@ -471,8 +595,8 @@ export default function BudgetManager() {
           <TextInput
             mode="outlined"
             label="Spent Amount"
-            value={categorySpent}
-            onChangeText={setCategorySpent}
+            value={tempCategorySpent}
+            onChangeText={setTempCategorySpent}
             keyboardType="numeric"
             left={<TextInput.Affix text="$" />}
             outlineColor={colors.border}
@@ -958,6 +1082,19 @@ const styles = StyleSheet.create({
   progressBar: {
     height: 8,
     borderRadius: 4,
+    marginTop: 8,
+  },
+  warningText: {
+    fontSize: 12,
+    marginTop: 4,
+    fontWeight: "500",
+  },
+  amountWithWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  warningIcon: {
+    marginRight: 4,
   },
   tipContainer: {
     flexDirection: "row",
