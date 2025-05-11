@@ -1,5 +1,8 @@
 # BudgetCopilot Application Documentation
 
+## Pitch Deck
+Startup Pitch [Slides](https://docs.google.com/presentation/d/1PtY-5ouJg_3388W7oEIh_2JwJeI5bbBYX6qiRKD1-iY/edit?usp=sharing)
+
 ## Project Overview
 **BudgetCopilot** is a modern fintech mobile application developed using React Native and Expo. It serves as a **Automated Smart Budget Manager** specifically designed for millennials and retail investors. The application aims to simplify personal finance management, demystify investing, and provide actionable insights through an intuitive interface and intelligent features.
 **Target Audience:** Users with Low Financial Management & Investors: Addresses their specific pain points with a modern, intuitive interface.
