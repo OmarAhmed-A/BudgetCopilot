@@ -274,11 +274,10 @@ export default function Index() {
             </Card.Content>
           </Card>
         </TouchableOpacity>
-
-        {/* Investment Summary */}
         <Card 
           style={[styles.card, { backgroundColor: colors.card }]}
           onPress={() => router.push("/invest")}
+          mode="elevated"
         >
           <Card.Content>
             <View style={styles.featureHeader}>
