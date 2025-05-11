@@ -1,5 +1,31 @@
 # BudgetCopilot Application Documentation
 
+- [BudgetCopilot Application Documentation](#budgetcopilot-application-documentation)
+  - [Pitch Deck](#pitch-deck)
+  - [Project Overview](#project-overview)
+  - [1. UML Diagram](#1-uml-diagram)
+  - [1. UML Diagrams](#1-uml-diagrams)
+    - [1.1. Component Diagram](#11-component-diagram)
+    - [1.2. Sequence Diagram: AI Advisor Interaction Flow](#12-sequence-diagram-ai-advisor-interaction-flow)
+    - [1.3. Class/Interface Diagram: Data Model](#13-classinterface-diagram-data-model)
+    - [1.4. User Flow Diagram: Budget Management Process](#14-user-flow-diagram-budget-management-process)
+    - [1.5 Usecase Diagram](#15-usecase-diagram)
+  - [2. Application Manual](#2-application-manual)
+    - [2.1. Feature Guides](#21-feature-guides)
+      - [2.1.1. Automated Smart Budget Manager](#211-automated-smart-budget-manager)
+      - [**2.1.2. Portfolio Manager**](#212-portfolio-manager)
+      - [2.1.3. User Profile Management](#213-user-profile-management)
+    - [2.3. Settings Configuration](#23-settings-configuration)
+  - [3. Business Case](#3-business-case)
+    - [3.1. Market Analysis](#31-market-analysis)
+    - [3.2. Revenue Models](#32-revenue-models)
+    - [3.3. User Acquisition Strategy](#33-user-acquisition-strategy)
+    - [3.4. Cost Structure](#34-cost-structure)
+    - [3.5. Break-Even Analysis and Projected ROI](#35-break-even-analysis-and-projected-roi)
+    - [3.6. Potential Expansion Opportunities](#36-potential-expansion-opportunities)
+  - [4. SWOT Analysis](#4-swot-analysis)
+  - [Addressing Key Problem Statements](#addressing-key-problem-statements)
+
 ## Pitch Deck
 Startup Pitch [Slides](https://docs.google.com/presentation/d/1PtY-5ouJg_3388W7oEIh_2JwJeI5bbBYX6qiRKD1-iY/edit?usp=sharing)
 
