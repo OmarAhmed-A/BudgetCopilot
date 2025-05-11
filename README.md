@@ -276,7 +276,7 @@ graph TD
 ```
 
 ### 1.5 Usecase Diagram
-![image](https://gist.github.com/user-attachments/assets/a6d495ee-f51c-43cd-a374-64fbd517a37d)
+![image](https://github.com/user-attachments/assets/5c842e2b-69b1-4aa8-8b77-287dd62a063e)
 
 ## 2. Application Manual
 ### 2.1. Feature Guides
